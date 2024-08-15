@@ -10,4 +10,6 @@ import com.anantadw.spring_boot_api.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
+
+    boolean existsByUsername(String username);
 }

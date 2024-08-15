@@ -42,7 +42,7 @@ public class User extends Auditable implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private String role;
+    private String role = "User";
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
