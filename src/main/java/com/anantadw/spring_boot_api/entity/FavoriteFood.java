@@ -1,4 +1,4 @@
-package com.anantadw.spring_boot_api.model;
+package com.anantadw.spring_boot_api.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;

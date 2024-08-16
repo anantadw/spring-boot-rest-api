@@ -1,4 +1,4 @@
-package com.anantadw.spring_boot_api.model;
+package com.anantadw.spring_boot_api.entity;
 
 import java.util.Set;
 

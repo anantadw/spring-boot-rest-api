@@ -1,4 +1,4 @@
-package com.anantadw.spring_boot_api.model;
+package com.anantadw.spring_boot_api.entity;
 
 import java.util.Set;
 
@@ -19,20 +19,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "levels")
-public class Level extends Auditable {
+@Table(name = "categories")
+public class Category extends Auditable {
     @Id
-    @Column(name = "level_id", nullable = false)
+    @Column(name = "category_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "level_name", nullable = false)
+    @Column(name = "category_name", nullable = false)
     private String name;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
     // * Relationships
-    @OneToMany(mappedBy = "level")
+    @OneToMany(mappedBy = "category")
     private Set<Recipe> recipes;
 }

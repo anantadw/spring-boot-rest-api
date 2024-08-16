@@ -4,13 +4,14 @@ import org.springframework.http.HttpStatus;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
 
-public class ApiUtil {
-    public static ApiResponse buildApiResponse(String message, HttpStatus status, Object data) {
+public final class ApiUtil {
+    public static ApiResponse buildApiResponse(String message, HttpStatus status, Object data, Object errors) {
         ApiResponse response = new ApiResponse();
         response.setMessage(message);
         response.setStatusCode(status.value());
         response.setStatus(status.getReasonPhrase());
         response.setData(data);
+        response.setErrors(errors);
 
         return response;
     }
