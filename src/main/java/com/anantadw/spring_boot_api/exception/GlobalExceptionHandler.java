@@ -1,4 +1,4 @@
-package com.anantadw.spring_boot_api.advice;
+package com.anantadw.spring_boot_api.exception;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import com.anantadw.spring_boot_api.dto.ApiResponse;
 import com.anantadw.spring_boot_api.util.ApiUtil;
 
 @RestControllerAdvice
-public class ApplicationExceptionHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ApiResponse> apiException(ResponseStatusException e) {
         ApiResponse response = ApiUtil.buildApiResponse(

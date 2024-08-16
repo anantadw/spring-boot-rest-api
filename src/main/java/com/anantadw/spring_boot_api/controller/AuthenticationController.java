@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
+import com.anantadw.spring_boot_api.dto.auth.SignInRequest;
 import com.anantadw.spring_boot_api.dto.auth.SignUpRequest;
 import com.anantadw.spring_boot_api.service.AuthenticationService;
 
@@ -23,6 +24,13 @@ public class AuthenticationController {
     @PostMapping(path = "/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> signUp(@RequestBody @Valid SignUpRequest request) {
         ApiResponse response = authenticationService.signUp(request);
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping(path = "/sign-in", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> signIn(@RequestBody @Valid SignInRequest request) {
+        ApiResponse response = authenticationService.signIn(request);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
