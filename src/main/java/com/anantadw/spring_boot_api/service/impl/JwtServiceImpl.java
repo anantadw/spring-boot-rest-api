@@ -26,24 +26,29 @@ public class JwtServiceImpl implements JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
 
         return claimsResolver.apply(claims);
     }
 
+    @Override
     public long getExpirationTime() {
         return jwtExpiration;
     }
 
+    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails, jwtExpiration);
     }
 
+    @Override
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails,
@@ -54,14 +59,16 @@ public class JwtServiceImpl implements JwtService {
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSignInKey())
+                .signWith(getSignInKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
+    @Override
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
 

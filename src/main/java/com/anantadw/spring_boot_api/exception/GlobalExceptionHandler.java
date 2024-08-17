@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
                 e.getReason(),
                 HttpStatus.valueOf(e.getStatusCode().value()),
                 null,
+                null,
                 null);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -40,7 +41,8 @@ public class GlobalExceptionHandler {
                 "Validation Error",
                 HttpStatus.BAD_REQUEST,
                 null,
-                errors);
+                errors,
+                null);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

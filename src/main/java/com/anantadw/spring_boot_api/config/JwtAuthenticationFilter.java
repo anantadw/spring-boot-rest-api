@@ -19,7 +19,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -42,25 +44,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        jwt = authHeader.substring(7);
-        userUsername = jwtService.extractUsername(jwt);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            log.info("AuthHeader: {}", authHeader);
+            jwt = authHeader.substring(7);
+            log.info(jwt);
+            userUsername = jwtService.extractUsername(jwt);
+            log.info(userUsername);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            log.info("Authentication: {}", authentication);
 
-        if (userUsername != null && authentication == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userUsername);
+            if (userUsername != null && authentication == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userUsername);
+                log.info("UserDetails: {}", userDetails);
+                log.info("UserDetailsUsername: {}", userDetails.getUsername());
 
-            if (jwtService.isTokenValid(userUsername, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
+                log.info("Token Valid: {}", jwtService.isTokenValid(jwt, userDetails));
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities());
+                    log.info("AuthToken: {}", authToken);
 
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            log.error("Error logging in: {}", e.getMessage());
+            // e.printStackTrace();
+        }
     }
 }

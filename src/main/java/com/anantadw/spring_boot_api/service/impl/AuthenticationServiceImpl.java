@@ -47,6 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 "User %s registered successfully!".formatted(user.getUsername()),
                 HttpStatus.CREATED,
                 null,
+                null,
                 null);
     }
 
@@ -76,6 +77,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     "User %s signed in successfully!".formatted(user.getUsername()),
                     HttpStatus.OK,
                     response,
+                    null,
                     null);
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(

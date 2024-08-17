@@ -16,4 +16,5 @@ public class ApiResponse {
     private String status;
     private Object data;
     private Object errors;
+    private Long total;
 }
