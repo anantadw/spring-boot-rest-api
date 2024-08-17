@@ -24,20 +24,20 @@ import lombok.Setter;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
     @CreatedBy
-    @Column(name = "created_by", nullable = false)
+    @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_time", nullable = false)
+    @Column(name = "created_time", nullable = false, updatable = false)
     private Date createdTime;
 
     @LastModifiedBy
-    @Column(name = "modified_by")
+    @Column(name = "modified_by", insertable = false)
     private String modifiedBy;
 
     @LastModifiedDate
-    @Column(name = "modified_time")
+    @Column(name = "modified_time", insertable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedTime;
 }
