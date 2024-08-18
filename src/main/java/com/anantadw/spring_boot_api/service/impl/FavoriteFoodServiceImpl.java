@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
-import com.anantadw.spring_boot_api.dto.FavoriteFoodRequest;
+import com.anantadw.spring_boot_api.dto.request.FavoriteFoodRequest;
 import com.anantadw.spring_boot_api.entity.FavoriteFood;
 import com.anantadw.spring_boot_api.entity.FavoriteFoodKey;
 import com.anantadw.spring_boot_api.entity.Recipe;
@@ -32,7 +32,8 @@ public class FavoriteFoodServiceImpl implements FavoriteFoodService {
     @Override
     public ApiResponse toggleFavoriteRecipe(int recipeId, FavoriteFoodRequest request) {
         log.info("Toggle favorite recipe with recipeId {} and userId {}", recipeId, request.getUserId());
-        FavoriteFood favoriteFood = favoriteFoodRepository.findByUserIdAndRecipeId(request.getUserId(), recipeId)
+        FavoriteFood favoriteFood = favoriteFoodRepository
+                .findByUserIdAndRecipeId(request.getUserId(), recipeId)
                 .orElse(null);
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,

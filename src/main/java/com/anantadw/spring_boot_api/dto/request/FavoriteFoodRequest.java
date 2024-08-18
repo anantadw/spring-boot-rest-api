@@ -1,4 +1,4 @@
-package com.anantadw.spring_boot_api.dto;
+package com.anantadw.spring_boot_api.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
-import com.anantadw.spring_boot_api.dto.FavoriteFoodRequest;
+import com.anantadw.spring_boot_api.dto.request.FavoriteFoodRequest;
 import com.anantadw.spring_boot_api.service.FavoriteFoodService;
 import com.anantadw.spring_boot_api.service.RecipeService;
 
