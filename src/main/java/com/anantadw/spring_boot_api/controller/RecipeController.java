@@ -8,6 +8,7 @@ import com.anantadw.spring_boot_api.dto.FavoriteFoodRequest;
 import com.anantadw.spring_boot_api.service.FavoriteFoodService;
 import com.anantadw.spring_boot_api.service.RecipeService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class RecipeController {
 
     @PutMapping(path = "/book-recipes/{recipeId}/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> toggleFavoriteRecipe(@PathVariable int recipeId,
-            @RequestBody FavoriteFoodRequest request) {
+            @RequestBody @Valid FavoriteFoodRequest request) {
         ApiResponse response = favoriteFoodService.toggleFavoriteRecipe(recipeId, request);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
