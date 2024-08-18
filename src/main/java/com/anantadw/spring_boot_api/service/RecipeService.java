@@ -14,4 +14,6 @@ public interface RecipeService {
             List<String> sortBy,
             int pageSize,
             int pageNumber);
+
+    ApiResponse getRecipeDetail(int recipeId);
 }

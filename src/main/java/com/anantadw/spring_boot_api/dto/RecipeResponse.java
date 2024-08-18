@@ -1,5 +1,7 @@
 package com.anantadw.spring_boot_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 @Data
@@ -22,5 +24,6 @@ public class RecipeResponse {
     private String recipeName;
     private String imageUrl;
     private int time;
+    @JsonProperty("isFavorite")
     private boolean isFavorite;
 }

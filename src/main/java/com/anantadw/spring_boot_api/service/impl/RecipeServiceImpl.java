@@ -10,8 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
+import com.anantadw.spring_boot_api.dto.RecipeDetailResponse;
 import com.anantadw.spring_boot_api.dto.RecipeResponse;
 import com.anantadw.spring_boot_api.entity.FavoriteFood;
 import com.anantadw.spring_boot_api.entity.Recipe;
@@ -60,6 +62,23 @@ public class RecipeServiceImpl implements RecipeService {
                 data,
                 null,
                 recipes.getTotalElements());
+    }
+
+    @Override
+    public ApiResponse getRecipeDetail(int recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Resep tidak ditemukan"));
+
+        RecipeDetailResponse response = mapToRecipeDetailResponse(recipe);
+
+        return ApiUtil.buildApiResponse(
+                "Berhasil memuat Resep \"%s\"".formatted(recipe.getName()),
+                HttpStatus.OK,
+                response,
+                null,
+                (long) 1);
     }
 
     private Specification<Recipe> buildRecipeSpecification(
@@ -114,4 +133,27 @@ public class RecipeServiceImpl implements RecipeService {
         return response;
     }
 
+    private RecipeDetailResponse mapToRecipeDetailResponse(Recipe recipe) {
+        RecipeDetailResponse response = new RecipeDetailResponse();
+        RecipeDetailResponse.Category category = new RecipeDetailResponse.Category();
+        RecipeDetailResponse.Level level = new RecipeDetailResponse.Level();
+
+        response.setRecipeId(recipe.getId());
+
+        category.setCategoryId(recipe.getCategory().getId());
+        category.setCategoryName(recipe.getCategory().getName());
+        response.setCategories(category);
+
+        level.setLevelId(recipe.getLevel().getId());
+        level.setLevelName(recipe.getLevel().getName());
+        response.setLevels(level);
+
+        response.setRecipeName(recipe.getName());
+        response.setImageUrl(recipe.getImage());
+        response.setTime(recipe.getTimeCook());
+        response.setIngredient(recipe.getIngredient());
+        response.setHowToCook(recipe.getHowToCook());
+
+        return response;
+    }
 }

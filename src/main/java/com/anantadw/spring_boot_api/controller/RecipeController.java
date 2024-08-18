@@ -44,6 +44,13 @@ public class RecipeController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping(path = "/book-recipes/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> getRecipeDetail(@PathVariable int recipeId) {
+        ApiResponse response = recipeService.getRecipeDetail(recipeId);
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
     @PutMapping(path = "/book-recipes/{recipeId}/favorites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> toggleFavoriteRecipe(@PathVariable int recipeId,
             @RequestBody @Valid FavoriteFoodRequest request) {
