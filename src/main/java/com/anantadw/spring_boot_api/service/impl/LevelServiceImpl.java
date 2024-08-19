@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
-import com.anantadw.spring_boot_api.dto.response.LevelOptionResponse;
+import com.anantadw.spring_boot_api.dto.LevelOptionDto;
 import com.anantadw.spring_boot_api.entity.Level;
 import com.anantadw.spring_boot_api.repository.LevelRepository;
 import com.anantadw.spring_boot_api.service.LevelService;
@@ -23,8 +23,8 @@ public class LevelServiceImpl implements LevelService {
     @Override
     public ApiResponse getLevelOptionList() {
         List<Level> levels = levelRepository.findAll();
-        List<LevelOptionResponse> response = levels.stream()
-                .map(this::mapToLevelOptionResponse)
+        List<LevelOptionDto> response = levels.stream()
+                .map(this::mapToLevelOptionDto)
                 .collect(Collectors.toList());
 
         return ApiUtil.buildApiResponse("Berhasil memuat Data Level",
@@ -34,8 +34,8 @@ public class LevelServiceImpl implements LevelService {
                 null);
     }
 
-    private LevelOptionResponse mapToLevelOptionResponse(Level level) {
-        LevelOptionResponse response = new LevelOptionResponse();
+    private LevelOptionDto mapToLevelOptionDto(Level level) {
+        LevelOptionDto response = new LevelOptionDto();
         response.setLevelId(level.getId());
         response.setLevelName(level.getName());
 

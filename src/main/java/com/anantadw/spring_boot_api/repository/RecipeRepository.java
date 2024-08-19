@@ -9,6 +9,8 @@ import com.anantadw.spring_boot_api.entity.Recipe;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpecificationExecutor<Recipe> {
+    boolean existsByName(String name);
+
     interface Specs {
         static Specification<Recipe> recipeNameContains(String recipeName) {
             return (root, query, criteriaBuilder) -> {

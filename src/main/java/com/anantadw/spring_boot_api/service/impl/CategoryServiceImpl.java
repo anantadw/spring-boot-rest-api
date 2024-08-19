@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
-import com.anantadw.spring_boot_api.dto.response.CategoryOptionResponse;
+import com.anantadw.spring_boot_api.dto.CategoryOptionDto;
 import com.anantadw.spring_boot_api.entity.Category;
 import com.anantadw.spring_boot_api.repository.CategoryRepository;
 import com.anantadw.spring_boot_api.service.CategoryService;
@@ -23,8 +23,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ApiResponse getCategoryOptionList() {
         List<Category> categories = categoryRepository.findAll();
-        List<CategoryOptionResponse> responses = categories.stream()
-                .map(this::mapToCategoryOptionResponse)
+        List<CategoryOptionDto> responses = categories.stream()
+                .map(this::mapToCategoryOptionDto)
                 .collect(Collectors.toList());
 
         return ApiUtil.buildApiResponse("Berhashil memuat Daftar Kategori",
@@ -34,8 +34,8 @@ public class CategoryServiceImpl implements CategoryService {
                 null);
     }
 
-    private CategoryOptionResponse mapToCategoryOptionResponse(Category category) {
-        CategoryOptionResponse response = new CategoryOptionResponse();
+    private CategoryOptionDto mapToCategoryOptionDto(Category category) {
+        CategoryOptionDto response = new CategoryOptionDto();
         response.setCategoryId(category.getId());
         response.setCategoryName(category.getName());
 

@@ -1,25 +1,27 @@
 package com.anantadw.spring_boot_api.controller;
 
+import java.util.List;
+
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
+import com.anantadw.spring_boot_api.dto.request.CreateRecipeRequest;
 import com.anantadw.spring_boot_api.dto.request.FavoriteFoodRequest;
 import com.anantadw.spring_boot_api.service.FavoriteFoodService;
 import com.anantadw.spring_boot_api.service.RecipeService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/book-recipe")
@@ -47,6 +49,13 @@ public class RecipeController {
     @GetMapping(path = "/book-recipes/{recipeId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> getRecipeDetail(@PathVariable int recipeId) {
         ApiResponse response = recipeService.getRecipeDetail(recipeId);
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping(path = "/book-recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> createRecipe(@ModelAttribute CreateRecipeRequest recipe) {
+        ApiResponse response = recipeService.createRecipe(recipe);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }

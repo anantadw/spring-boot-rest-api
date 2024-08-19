@@ -3,6 +3,7 @@ package com.anantadw.spring_boot_api.service;
 import java.util.List;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
+import com.anantadw.spring_boot_api.dto.request.CreateRecipeRequest;
 
 public interface RecipeService {
     ApiResponse getRecipes(
@@ -16,4 +17,6 @@ public interface RecipeService {
             int pageNumber);
 
     ApiResponse getRecipeDetail(int recipeId);
+
+    ApiResponse createRecipe(CreateRecipeRequest request);
 }
