@@ -34,5 +34,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpe
         static Specification<Recipe> notDeleted() {
             return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get("isDeleted"));
         }
+
+        static Specification<Recipe> userIdEquals(int userId) {
+            return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user").get("id"), userId);
+        }
     }
 }

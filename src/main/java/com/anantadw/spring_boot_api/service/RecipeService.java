@@ -19,6 +19,8 @@ public interface RecipeService {
 
     ApiResponse getRecipeDetail(int recipeId);
 
+    ApiResponse getUserRecipes();
+
     ApiResponse createRecipe(CreateRecipeRequest request);
 
     ApiResponse updateRecipe(UpdateRecipeRequest request);

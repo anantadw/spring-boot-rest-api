@@ -64,7 +64,7 @@ public class RecipeServiceImpl implements RecipeService {
                 userId, recipeName, levelId, categoryId, time, sortBy, pageSize, pageNumber);
         Sort sort = Sort.by(Sort.Direction.fromString(sortBy.get(1)), sortBy.get(0));
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
-        Specification<Recipe> spec = buildRecipeSpecification(recipeName, levelId, categoryId, time);
+        Specification<Recipe> spec = buildRecipeSpecification(recipeName, levelId, categoryId, time, null);
 
         Page<Recipe> recipes = recipeRepository.findAll(spec, pageRequest);
         log.info("Total elements: {}", recipes.getTotalElements());
@@ -96,6 +96,30 @@ public class RecipeServiceImpl implements RecipeService {
                 response,
                 null,
                 (long) 1);
+    }
+
+    @Override
+    public ApiResponse getUserRecipes() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found"));
+
+        Sort sort = Sort.by(Sort.Direction.ASC, "name");
+        Specification<Recipe> spec = buildRecipeSpecification(null, null, null, null, user.getId());
+
+        List<Recipe> recipes = recipeRepository.findAll(spec, sort);
+        List<RecipeResponse> data = recipes
+                .stream()
+                .map(recipe -> mapToRecipeResponse(recipe, user.getId()))
+                .collect(Collectors.toList());
+
+        return ApiUtil.buildApiResponse(
+                "Berhasil memuat Resep Masakan Saya",
+                HttpStatus.OK,
+                data,
+                null,
+                (long) recipes.size());
     }
 
     // ! Todo: Upload file using MinIO
@@ -181,7 +205,8 @@ public class RecipeServiceImpl implements RecipeService {
             String recipeName,
             Integer levelId,
             Integer categoryId,
-            Integer time) {
+            Integer time,
+            Integer userId) {
         Specification<Recipe> spec = Specification.where(RecipeRepository.Specs.notDeleted());
 
         if (recipeName != null && !recipeName.trim().isEmpty()) {
@@ -198,6 +223,10 @@ public class RecipeServiceImpl implements RecipeService {
 
         if (time != null) {
             spec = spec.and(RecipeRepository.Specs.timeEquals(time));
+        }
+
+        if (userId != null) {
+            spec = spec.and(RecipeRepository.Specs.userIdEquals(userId));
         }
 
         return spec;

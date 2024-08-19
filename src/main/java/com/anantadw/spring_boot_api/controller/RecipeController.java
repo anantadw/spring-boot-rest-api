@@ -54,6 +54,13 @@ public class RecipeController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping(path = "/my-recipes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> getUserRecipes() {
+        ApiResponse response = recipeService.getUserRecipes();
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
     @PostMapping(path = "/book-recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> createRecipe(@ModelAttribute CreateRecipeRequest recipe) {
         ApiResponse response = recipeService.createRecipe(recipe);
