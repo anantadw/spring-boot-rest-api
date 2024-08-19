@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
 import com.anantadw.spring_boot_api.dto.response.CategoryOptionResponse;
+import com.anantadw.spring_boot_api.dto.response.LevelOptionResponse;
 import com.anantadw.spring_boot_api.dto.response.RecipeDetailResponse;
 import com.anantadw.spring_boot_api.dto.response.RecipeResponse;
 import com.anantadw.spring_boot_api.entity.FavoriteFood;
@@ -116,7 +117,7 @@ public class RecipeServiceImpl implements RecipeService {
     private RecipeResponse mapToRecipeResponse(Recipe recipe, int userId) {
         RecipeResponse response = new RecipeResponse();
         CategoryOptionResponse category = new CategoryOptionResponse();
-        RecipeResponse.Level level = new RecipeResponse.Level();
+        LevelOptionResponse level = new LevelOptionResponse();
 
         response.setRecipeId(recipe.getId());
 
@@ -142,7 +143,7 @@ public class RecipeServiceImpl implements RecipeService {
     private RecipeDetailResponse mapToRecipeDetailResponse(Recipe recipe) {
         RecipeDetailResponse response = new RecipeDetailResponse();
         CategoryOptionResponse category = new CategoryOptionResponse();
-        RecipeDetailResponse.Level level = new RecipeDetailResponse.Level();
+        LevelOptionResponse level = new LevelOptionResponse();
 
         response.setRecipeId(recipe.getId());
 
