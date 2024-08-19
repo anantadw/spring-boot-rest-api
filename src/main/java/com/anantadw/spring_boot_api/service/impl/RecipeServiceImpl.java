@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,8 +20,10 @@ import com.anantadw.spring_boot_api.dto.response.RecipeDetailResponse;
 import com.anantadw.spring_boot_api.dto.response.RecipeResponse;
 import com.anantadw.spring_boot_api.entity.FavoriteFood;
 import com.anantadw.spring_boot_api.entity.Recipe;
+import com.anantadw.spring_boot_api.entity.User;
 import com.anantadw.spring_boot_api.repository.FavoriteFoodRepository;
 import com.anantadw.spring_boot_api.repository.RecipeRepository;
+import com.anantadw.spring_boot_api.repository.UserRepository;
 import com.anantadw.spring_boot_api.service.RecipeService;
 import com.anantadw.spring_boot_api.util.ApiUtil;
 
@@ -32,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final FavoriteFoodRepository favoriteFoodRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ApiResponse getRecipes(
@@ -128,12 +133,12 @@ public class RecipeServiceImpl implements RecipeService {
         response.setTime(recipe.getTimeCook());
 
         Optional<FavoriteFood> favoriteFood = favoriteFoodRepository.findByUserIdAndRecipeId(userId, recipe.getId());
-        boolean isFavorite = favoriteFood.isPresent() && favoriteFood.get().isFavorite();
-        response.setFavorite(isFavorite);
+        response.setFavorite(favoriteFood.map(FavoriteFood::isFavorite).orElse(false));
 
         return response;
     }
 
+    // ! Todo: DRY
     private RecipeDetailResponse mapToRecipeDetailResponse(Recipe recipe) {
         RecipeDetailResponse response = new RecipeDetailResponse();
         CategoryOptionResponse category = new CategoryOptionResponse();
@@ -154,6 +159,15 @@ public class RecipeServiceImpl implements RecipeService {
         response.setTime(recipe.getTimeCook());
         response.setIngredient(recipe.getIngredient());
         response.setHowToCook(recipe.getHowToCook());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found"));
+
+        Optional<FavoriteFood> favoriteFood = favoriteFoodRepository.findByUserIdAndRecipeId(user.getId(),
+                recipe.getId());
+        response.setFavorite(favoriteFood.map(FavoriteFood::isFavorite).orElse(false));
 
         return response;
     }
