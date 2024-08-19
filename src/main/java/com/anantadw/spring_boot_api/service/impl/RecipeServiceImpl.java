@@ -19,6 +19,7 @@ import com.anantadw.spring_boot_api.dto.ApiResponse;
 import com.anantadw.spring_boot_api.dto.CategoryOptionDto;
 import com.anantadw.spring_boot_api.dto.LevelOptionDto;
 import com.anantadw.spring_boot_api.dto.request.CreateRecipeRequest;
+import com.anantadw.spring_boot_api.dto.request.UpdateRecipeRequest;
 import com.anantadw.spring_boot_api.dto.response.RecipeDetailResponse;
 import com.anantadw.spring_boot_api.dto.response.RecipeResponse;
 import com.anantadw.spring_boot_api.entity.Category;
@@ -112,7 +113,11 @@ public class RecipeServiceImpl implements RecipeService {
         newRecipe.setTimeCook(request.getTimeCook());
         newRecipe.setIngredient(request.getIngredient());
         newRecipe.setHowToCook(request.getHowToCook());
-        newRecipe.setImage(getImageName(request));
+        newRecipe.setImage(getImageName(
+                request.getRecipeName(),
+                request.getCategories().getCategoryName(),
+                request.getLevels().getLevelName(),
+                request.getImageFilename().getOriginalFilename()));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUsername(authentication.getName())
@@ -134,6 +139,39 @@ public class RecipeServiceImpl implements RecipeService {
 
         return ApiUtil.buildApiResponse("Recipe created successfully",
                 HttpStatus.CREATED,
+                null,
+                null,
+                null);
+    }
+
+    // ! Todo: Upload file using MinIO
+    @Transactional
+    @Override
+    public ApiResponse updateRecipe(UpdateRecipeRequest request) {
+        Recipe recipe = recipeRepository.findById(request.getRecipeId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Resep tidak ditemukan"));
+
+        recipe.setName(request.getRecipeName());
+        recipe.setTimeCook(request.getTimeCook());
+        recipe.setImage(getImageName(
+                request.getRecipeName(),
+                request.getCategories().getCategoryName(),
+                request.getLevels().getLevelName(),
+                request.getImageFilename().getOriginalFilename()));
+
+        Category category = categoryRepository.findById(request.getCategories().getCategoryId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Category not found"));
+        recipe.setCategory(category);
+
+        Level level = levelRepository.findById(request.getLevels().getLevelId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Level not found"));
+        recipe.setLevel(level);
+
+        return ApiUtil.buildApiResponse("Resep %s berhasil diubah!".formatted(recipe.getName()),
+                HttpStatus.OK,
                 null,
                 null,
                 null);
@@ -224,13 +262,13 @@ public class RecipeServiceImpl implements RecipeService {
         return response;
     }
 
-    private String getImageName(CreateRecipeRequest request) {
+    private String getImageName(String recipeName, String categoryName, String levelName, String originalFilename) {
         String imageName = "%s_%s_%s_%d.%s".formatted(
-                request.getRecipeName().trim().toLowerCase().replaceAll("\\s", ""),
-                request.getCategories().getCategoryName().trim().toLowerCase(),
-                request.getLevels().getLevelName().trim().toLowerCase(),
+                recipeName.trim().toLowerCase().replaceAll("\\s", ""),
+                categoryName.trim().toLowerCase(),
+                levelName.trim().toLowerCase(),
                 System.currentTimeMillis(),
-                StringUtils.getFilenameExtension(request.getImageFilename().getOriginalFilename()));
+                StringUtils.getFilenameExtension(originalFilename));
         log.info("Image name: {}", imageName);
 
         return imageName;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.anantadw.spring_boot_api.dto.ApiResponse;
 import com.anantadw.spring_boot_api.dto.request.CreateRecipeRequest;
+import com.anantadw.spring_boot_api.dto.request.UpdateRecipeRequest;
 
 public interface RecipeService {
     ApiResponse getRecipes(
@@ -19,4 +20,6 @@ public interface RecipeService {
     ApiResponse getRecipeDetail(int recipeId);
 
     ApiResponse createRecipe(CreateRecipeRequest request);
+
+    ApiResponse updateRecipe(UpdateRecipeRequest request);
 }

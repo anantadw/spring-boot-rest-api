@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anantadw.spring_boot_api.dto.ApiResponse;
 import com.anantadw.spring_boot_api.dto.request.CreateRecipeRequest;
 import com.anantadw.spring_boot_api.dto.request.FavoriteFoodRequest;
+import com.anantadw.spring_boot_api.dto.request.UpdateRecipeRequest;
 import com.anantadw.spring_boot_api.service.FavoriteFoodService;
 import com.anantadw.spring_boot_api.service.RecipeService;
 
@@ -56,6 +57,13 @@ public class RecipeController {
     @PostMapping(path = "/book-recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> createRecipe(@ModelAttribute CreateRecipeRequest recipe) {
         ApiResponse response = recipeService.createRecipe(recipe);
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PutMapping(path = "/book-recipes/{recipeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> updateRecipe(@ModelAttribute UpdateRecipeRequest recipe) {
+        ApiResponse response = recipeService.updateRecipe(recipe);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
