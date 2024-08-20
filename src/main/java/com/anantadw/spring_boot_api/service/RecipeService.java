@@ -24,4 +24,6 @@ public interface RecipeService {
     ApiResponse createRecipe(CreateRecipeRequest request);
 
     ApiResponse updateRecipe(UpdateRecipeRequest request);
+
+    ApiResponse deleteUserRecipe(int recipeId);
 }

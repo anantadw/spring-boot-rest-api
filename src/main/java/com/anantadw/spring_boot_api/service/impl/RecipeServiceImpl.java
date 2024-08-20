@@ -201,6 +201,23 @@ public class RecipeServiceImpl implements RecipeService {
                 null);
     }
 
+    @Override
+    public ApiResponse deleteUserRecipe(int recipeId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Resep tidak ditemukan"));
+
+        recipe.setDeleted(true);
+
+        recipeRepository.save(recipe);
+
+        return ApiUtil.buildApiResponse("Resep \"%s\" berhasil dihapus",
+                HttpStatus.OK,
+                null,
+                null,
+                null);
+    }
+
     private Specification<Recipe> buildRecipeSpecification(
             String recipeName,
             Integer levelId,
