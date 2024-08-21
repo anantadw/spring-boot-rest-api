@@ -62,6 +62,22 @@ public class RecipeController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @GetMapping(path = "/my-favorite-recipes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> getUserFavoriteRecipes(
+            @RequestParam int userId,
+            @RequestParam(required = false) String recipeName,
+            @RequestParam(required = false) Integer levelId,
+            @RequestParam(required = false) Integer categoryId,
+            @RequestParam(required = false) Integer time,
+            @RequestParam(defaultValue = "name,asc") List<String> sortBy,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "0") int pageNumber) {
+        ApiResponse response = favoriteFoodService.getUserFavoriteRecipes(userId, recipeName, levelId, categoryId, time,
+                sortBy, pageSize, pageNumber);
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
     @PostMapping(path = "/book-recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> createRecipe(@ModelAttribute CreateRecipeRequest recipe) {
         ApiResponse response = recipeService.createRecipe(recipe);
